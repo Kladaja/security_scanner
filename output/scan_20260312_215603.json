@@ -1,0 +1,959 @@
+{
+  "scan_id": "7eb7b2bb-a044-433a-9837-400127e09ec4",
+  "target_url": "https://juice-shop.herokuapp.com",
+  "start_time": "2026-03-12T21:44:55.259532",
+  "end_time": "2026-03-12T21:56:03.714203",
+  "status": "completed",
+  "statistics": {
+    "total_requests": 500,
+    "endpoints_discovered": 31,
+    "findings_count": 16,
+    "findings_by_severity": {
+      "critical": 0,
+      "high": 3,
+      "medium": 13,
+      "low": 0,
+      "info": 0
+    }
+  },
+  "endpoints": [
+    {
+      "url": "https://juice-shop.herokuapp.com/api/uploads",
+      "path": "/api/uploads",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/oauth/callback",
+      "path": "/api/oauth/callback",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/saml",
+      "path": "/api/saml",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/auth/change-password",
+      "path": "/api/auth/change-password",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/.htpasswd",
+      "path": "/.htpasswd",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/create",
+      "path": "/api/create",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/auth/signup",
+      "path": "/api/auth/signup",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/customers",
+      "path": "/api/customers",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/schema",
+      "path": "/api/schema",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/internal/metrics",
+      "path": "/api/internal/metrics",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/get",
+      "path": "/api/get",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/logs",
+      "path": "/api/logs",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/api/private",
+      "path": "/api/private",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 500,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "critical",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A01"
+      ],
+      "notes": "Server error (potential vulnerability)"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/wp-config.php",
+      "path": "/wp-config.php",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "high",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A02"
+      ],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/management",
+      "path": "/management",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "high",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/web.config",
+      "path": "/web.config",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "high",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A02"
+      ],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/config.inc",
+      "path": "/config.inc",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "high",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [
+        "A02"
+      ],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/oauth",
+      "path": "/oauth",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "medium",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/v2/auth",
+      "path": "/v2/auth",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "medium",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/v3/auth",
+      "path": "/v3/auth",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "medium",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/",
+      "path": "/",
+      "method": "GET",
+      "source": "crawler",
+      "found_on": null,
+      "status_code": 503,
+      "content_type": "text/html; charset=utf-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": null
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/cpanel",
+      "path": "/cpanel",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/Pipfile.lock",
+      "path": "/Pipfile.lock",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/shop",
+      "path": "/shop",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/register",
+      "path": "/register",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/.svn",
+      "path": "/.svn",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/.circleci",
+      "path": "/.circleci",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/typo3",
+      "path": "/typo3",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/xmlrpc.php",
+      "path": "/xmlrpc.php",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/crossdomain.xml",
+      "path": "/crossdomain.xml",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    },
+    {
+      "url": "https://juice-shop.herokuapp.com/feed",
+      "path": "/feed",
+      "method": "GET",
+      "source": "bruteforce",
+      "found_on": null,
+      "status_code": 200,
+      "content_type": "text/html; charset=UTF-8",
+      "content_length": null,
+      "priority": "low",
+      "auth_required": null,
+      "redirect_url": null,
+      "parameters": [],
+      "owasp_categories": [],
+      "notes": "Accessible"
+    }
+  ],
+  "headers": [
+    {
+      "name": "Strict-Transport-Security",
+      "present": false,
+      "value": null,
+      "score": 0,
+      "severity": "high",
+      "issues": [
+        "HSTS header missing - SSL stripping attacks possible"
+      ],
+      "recommendation": "Add Strict-Transport-Security header with max-age of at least 1 year",
+      "owasp_categories": [
+        "A02",
+        "A04"
+      ]
+    },
+    {
+      "name": "Content-Security-Policy",
+      "present": false,
+      "value": null,
+      "score": 0,
+      "severity": "high",
+      "issues": [
+        "CSP header missing - no XSS protection from CSP"
+      ],
+      "recommendation": "Implement Content-Security-Policy header",
+      "owasp_categories": [
+        "A02",
+        "A05"
+      ]
+    },
+    {
+      "name": "X-Frame-Options",
+      "present": false,
+      "value": null,
+      "score": 0,
+      "severity": "high",
+      "issues": [
+        "X-Frame-Options missing - clickjacking possible"
+      ],
+      "recommendation": "Add X-Frame-Options: DENY or SAMEORIGIN",
+      "owasp_categories": [
+        "A02"
+      ]
+    },
+    {
+      "name": "X-Content-Type-Options",
+      "present": false,
+      "value": null,
+      "score": 0,
+      "severity": "medium",
+      "issues": [
+        "X-Content-Type-Options missing - MIME sniffing possible"
+      ],
+      "recommendation": "Add X-Content-Type-Options: nosniff",
+      "owasp_categories": [
+        "A02"
+      ]
+    },
+    {
+      "name": "X-XSS-Protection",
+      "present": false,
+      "value": null,
+      "score": 50,
+      "severity": "low",
+      "issues": [
+        "X-XSS-Protection not set (deprecated but useful for old browsers)"
+      ],
+      "recommendation": "Consider adding X-XSS-Protection: 1; mode=block",
+      "owasp_categories": [
+        "A02"
+      ]
+    },
+    {
+      "name": "Referrer-Policy",
+      "present": false,
+      "value": null,
+      "score": 30,
+      "severity": "low",
+      "issues": [
+        "Referrer-Policy not set - URL may leak to external sites"
+      ],
+      "recommendation": "Add Referrer-Policy: strict-origin-when-cross-origin",
+      "owasp_categories": [
+        "A02"
+      ]
+    },
+    {
+      "name": "Permissions-Policy",
+      "present": false,
+      "value": null,
+      "score": 30,
+      "severity": "low",
+      "issues": [
+        "Permissions-Policy not set - browser features not restricted"
+      ],
+      "recommendation": "Add Permissions-Policy to restrict sensitive features",
+      "owasp_categories": [
+        "A02"
+      ]
+    },
+    {
+      "name": "Cache-Control",
+      "present": true,
+      "value": "no-cache, no-store",
+      "score": 100,
+      "severity": null,
+      "issues": [],
+      "recommendation": null,
+      "owasp_categories": [
+        "A02"
+      ]
+    }
+  ],
+  "cookies": [],
+  "cors": {
+    "enabled": false,
+    "allow_origin": null,
+    "allow_credentials": false,
+    "allow_methods": [],
+    "allow_headers": [],
+    "expose_headers": [],
+    "max_age": null,
+    "issues": [],
+    "score": 100,
+    "owasp_categories": []
+  },
+  "info_disclosures": [],
+  "findings": [
+    {
+      "id": "44e305fe",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/uploads",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/uploads",
+      "evidence": {
+        "path": "/api/uploads",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "09b07a90",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/oauth/callback",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/oauth/callback",
+      "evidence": {
+        "path": "/api/oauth/callback",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "084ea0cb",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/saml",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/saml",
+      "evidence": {
+        "path": "/api/saml",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "2b7f7725",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/auth/change-password",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/auth/change-password",
+      "evidence": {
+        "path": "/api/auth/change-password",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "61fc726d",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/create",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/create",
+      "evidence": {
+        "path": "/api/create",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "b233f02b",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/auth/signup",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/auth/signup",
+      "evidence": {
+        "path": "/api/auth/signup",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "3b7bd80a",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/customers",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/customers",
+      "evidence": {
+        "path": "/api/customers",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "3bea5b4d",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/schema",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/schema",
+      "evidence": {
+        "path": "/api/schema",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "146402aa",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/internal/metrics",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/internal/metrics",
+      "evidence": {
+        "path": "/api/internal/metrics",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "a61b97c7",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/get",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/get",
+      "evidence": {
+        "path": "/api/get",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "522d0049",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/logs",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/logs",
+      "evidence": {
+        "path": "/api/logs",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "d2bb10be",
+      "module": "endpoint_discovery",
+      "title": "Server Error Detected",
+      "description": "Server error (500) at /api/private",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A10"
+      ],
+      "url": "https://juice-shop.herokuapp.com/api/private",
+      "evidence": {
+        "path": "/api/private",
+        "status_code": 500
+      },
+      "recommendation": "Investigate and fix the server error, implement proper error handling",
+      "references": []
+    },
+    {
+      "id": "bdb9599d",
+      "module": "header_analyzer",
+      "title": "Missing HSTS Header",
+      "description": "Strict-Transport-Security header is not set",
+      "severity": "high",
+      "confidence": "high",
+      "owasp_categories": [
+        "A02",
+        "A04"
+      ],
+      "url": "https://juice-shop.herokuapp.com",
+      "evidence": null,
+      "recommendation": "Add header: Strict-Transport-Security: max-age=31536000; includeSubDomains",
+      "references": []
+    },
+    {
+      "id": "d71d35bb",
+      "module": "header_analyzer",
+      "title": "Missing Content-Security-Policy",
+      "description": "CSP header is not set, reducing XSS protection",
+      "severity": "high",
+      "confidence": "high",
+      "owasp_categories": [
+        "A02",
+        "A05"
+      ],
+      "url": "https://juice-shop.herokuapp.com",
+      "evidence": null,
+      "recommendation": "Implement a strict CSP. Start with: default-src 'self'; script-src 'self'",
+      "references": []
+    },
+    {
+      "id": "889d5bbb",
+      "module": "header_analyzer",
+      "title": "Missing X-Frame-Options",
+      "description": "X-Frame-Options header not set - page may be vulnerable to clickjacking",
+      "severity": "high",
+      "confidence": "high",
+      "owasp_categories": [
+        "A02"
+      ],
+      "url": "https://juice-shop.herokuapp.com",
+      "evidence": null,
+      "recommendation": "Add header: X-Frame-Options: DENY",
+      "references": []
+    },
+    {
+      "id": "51433a64",
+      "module": "header_analyzer",
+      "title": "Missing X-Content-Type-Options",
+      "description": "X-Content-Type-Options header not set - browser may MIME-sniff responses",
+      "severity": "medium",
+      "confidence": "high",
+      "owasp_categories": [
+        "A02"
+      ],
+      "url": "https://juice-shop.herokuapp.com",
+      "evidence": null,
+      "recommendation": "Add header: X-Content-Type-Options: nosniff",
+      "references": []
+    }
+  ],
+  "summary": {
+    "score": 0,
+    "grade": "F"
+  }
+}

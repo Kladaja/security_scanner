@@ -1,0 +1,95 @@
+# OWASP Scanner Configuration
+# ============================
+
+# General Settings
+general:
+  timeout: 10                    # Request timeout in seconds
+  rate_limit: 2.0               # Requests per second
+  max_concurrent: 5             # Maximum concurrent requests
+  user_agent: "OWASP-Scanner/1.0 (Security Testing Tool)"
+  verify_ssl: true              # Verify SSL certificates
+  follow_redirects: true        # Follow HTTP redirects
+  max_redirects: 5              # Maximum redirects to follow
+
+# Endpoint Discovery Settings
+endpoint_discovery:
+  # Robots & Sitemap
+  check_robots: true
+  check_sitemap: true
+  max_sitemap_urls: 1000        # Maximum URLs to extract from sitemaps
+
+  # Crawler
+  crawl_enabled: true
+  crawl_depth: 3                # Maximum crawl depth
+  crawl_max_pages: 100          # Maximum pages to crawl
+  extract_js_urls: true         # Extract URLs from JavaScript
+
+  # Bruteforce
+  bruteforce_enabled: true
+  wordlists:
+    - "common_paths.txt"
+    - "api_endpoints.txt"
+  bruteforce_extensions: []     # Additional extensions to try
+
+  # Interesting status codes
+  interesting_codes:
+    - 200
+    - 201
+    - 301
+    - 302
+    - 307
+    - 308
+    - 401
+    - 403
+    - 405
+    - 500
+    - 502
+    - 503
+
+# Header Analyzer Settings
+header_analyzer:
+  # Security Headers to check
+  check_headers:
+    - "Strict-Transport-Security"
+    - "Content-Security-Policy"
+    - "X-Frame-Options"
+    - "X-Content-Type-Options"
+    - "X-XSS-Protection"
+    - "Referrer-Policy"
+    - "Permissions-Policy"
+    - "Cache-Control"
+
+  # Cookie Analysis
+  analyze_cookies: true
+  session_cookie_patterns:
+    - "session"
+    - "sess"
+    - "sid"
+    - "token"
+    - "auth"
+    - "jwt"
+    - "phpsessid"
+    - "jsessionid"
+    - "asp.net_sessionid"
+
+  # CORS Analysis
+  analyze_cors: true
+  cors_test_origins:
+    - "https://evil.com"
+    - "null"
+
+  # Information Disclosure
+  check_info_disclosure: true
+
+# Report Settings
+report:
+  output_format: "json"         # json, html, or both
+  output_dir: "./reports"
+  include_evidence: true
+  include_recommendations: true
+
+# Logging
+logging:
+  level: "INFO"                 # DEBUG, INFO, WARNING, ERROR
+  file: null                    # Log file path (null for console only)
+  format: "%(asctime)s - %(levelname)s - %(message)s"
