@@ -49,3 +49,14 @@ jobs:
         with:
           name: owasp-report
           path: output/
+
+      - name: Check security grade
+        run: |
+          echo "Checking security grade..."
+          GRADE=$(cat output/*.json | python -c "import sys, json; print(json.load(sys.stdin)['summary']['grade'])")
+          echo "Grade is: $GRADE"
+          if [[ "$GRADE" == "D" || "$GRADE" == "F" ]]; then
+            echo "Security grade is F → FAILING PIPELINE"
+            exit 1
+          fi
+          echo "Security grade acceptable"
