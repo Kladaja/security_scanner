@@ -121,22 +121,3 @@ python main.py test-connection -t https://example.com
 ```bash
 python main.py info
 ```
-
----
-
-### Juice Shop lokális futtatás
-
-```bash
-# Docker-rel (ajánlott)
-docker run -p 3000:3000 bkimminich/juice-shop
-
-# Majd teszteld:
-python main.py scan -t http://localhost:3000 -y
-```
-
-### Saját localhost tesztelés
-
-Ha van saját fejlesztői környezeted:
-```bash
-python main.py scan -t http://localhost:8080 -y
-```
