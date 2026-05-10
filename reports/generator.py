@@ -8,313 +8,22 @@ from core.models import ScanResult
 
 logger = logging.getLogger(__name__)
 
+TEMPLATE_PATH = Path(__file__).parent / "templates" / "report.html"
+
 
 def get_default_output_dir() -> Path:
     # Project root / output
     return Path(__file__).parent.parent / "output"
 
 
-HTML_TEMPLATE = """<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OWASP Security Scan Report - {target}</title>
-    <style>
-        :root {{
-            --primary: #1a73e8;
-            --danger: #dc3545;
-            --warning: #ffc107;
-            --success: #28a745;
-            --info: #17a2b8;
-            --dark: #343a40;
-            --light: #f8f9fa;
-        }}
-
-        * {{
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }}
-
-        body {{
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            background: var(--light);
-        }}
-
-        .container {{
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }}
-
-        header {{
-            background: linear-gradient(135deg, var(--dark) 0%, #1a1a2e 100%);
-            color: white;
-            padding: 40px 20px;
-            margin-bottom: 30px;
-        }}
-
-        header h1 {{
-            font-size: 2.5em;
-            margin-bottom: 10px;
-        }}
-
-        header .meta {{
-            opacity: 0.8;
-            font-size: 0.9em;
-        }}
-
-        .grade-badge {{
-            display: inline-block;
-            font-size: 3em;
-            font-weight: bold;
-            padding: 20px 30px;
-            border-radius: 10px;
-            margin: 20px 0;
-        }}
-
-        .grade-A {{ background: var(--success); color: white; }}
-        .grade-B {{ background: #8bc34a; color: white; }}
-        .grade-C {{ background: var(--warning); color: #333; }}
-        .grade-D {{ background: #ff9800; color: white; }}
-        .grade-F {{ background: var(--danger); color: white; }}
-
-        .summary-cards {{
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 20px;
-            margin-bottom: 30px;
-        }}
-
-        .card {{
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }}
-
-        .card h3 {{
-            color: var(--dark);
-            margin-bottom: 10px;
-            font-size: 0.9em;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }}
-
-        .card .value {{
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--primary);
-        }}
-
-        section {{
-            background: white;
-            border-radius: 10px;
-            padding: 25px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        }}
-
-        section h2 {{
-            color: var(--dark);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light);
-        }}
-
-        .finding {{
-            border-left: 4px solid;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: var(--light);
-            border-radius: 0 5px 5px 0;
-        }}
-
-        .finding.critical {{ border-color: #7b1fa2; background: #f3e5f5; }}
-        .finding.high {{ border-color: var(--danger); background: #ffebee; }}
-        .finding.medium {{ border-color: var(--warning); background: #fff8e1; }}
-        .finding.low {{ border-color: var(--info); background: #e3f2fd; }}
-        .finding.info {{ border-color: #9e9e9e; background: #fafafa; }}
-
-        .finding h4 {{
-            margin-bottom: 5px;
-        }}
-
-        .finding .severity {{
-            display: inline-block;
-            padding: 2px 8px;
-            border-radius: 3px;
-            font-size: 0.8em;
-            font-weight: bold;
-            text-transform: uppercase;
-            margin-right: 10px;
-        }}
-
-        .severity.critical {{ background: #7b1fa2; color: white; }}
-        .severity.high {{ background: var(--danger); color: white; }}
-        .severity.medium {{ background: var(--warning); color: #333; }}
-        .severity.low {{ background: var(--info); color: white; }}
-        .severity.info {{ background: #9e9e9e; color: white; }}
-
-        .finding .description {{
-            margin: 10px 0;
-            color: #666;
-        }}
-
-        .finding .recommendation {{
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            font-size: 0.9em;
-        }}
-
-        .finding .recommendation strong {{
-            color: var(--success);
-        }}
-
-        .owasp-tag {{
-            display: inline-block;
-            background: var(--dark);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.75em;
-            margin-right: 5px;
-        }}
-
-        table {{
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 15px;
-        }}
-
-        th, td {{
-            padding: 12px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }}
-
-        th {{
-            background: var(--light);
-            font-weight: 600;
-        }}
-
-        tr:hover {{
-            background: #f5f5f5;
-        }}
-
-        .status-badge {{
-            display: inline-block;
-            padding: 3px 8px;
-            border-radius: 3px;
-            font-size: 0.85em;
-        }}
-
-        .status-200 {{ background: #c8e6c9; color: #2e7d32; }}
-        .status-301, .status-302 {{ background: #fff3e0; color: #ef6c00; }}
-        .status-401, .status-403 {{ background: #ffcdd2; color: #c62828; }}
-        .status-500 {{ background: #7b1fa2; color: white; }}
-
-        .priority-critical {{ color: #7b1fa2; font-weight: bold; }}
-        .priority-high {{ color: var(--danger); font-weight: bold; }}
-        .priority-medium {{ color: var(--warning); }}
-        .priority-low {{ color: var(--info); }}
-
-        .header-score {{
-            display: inline-block;
-            width: 40px;
-            height: 40px;
-            line-height: 40px;
-            text-align: center;
-            border-radius: 50%;
-            font-weight: bold;
-            color: white;
-        }}
-
-        .score-high {{ background: var(--success); }}
-        .score-medium {{ background: var(--warning); color: #333; }}
-        .score-low {{ background: var(--danger); }}
-
-        .cookie-flags {{
-            display: flex;
-            gap: 5px;
-        }}
-
-        .flag {{
-            display: inline-block;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 0.75em;
-        }}
-
-        .flag.present {{
-            background: var(--success);
-            color: white;
-        }}
-
-        .flag.missing {{
-            background: var(--danger);
-            color: white;
-        }}
-
-        footer {{
-            text-align: center;
-            padding: 20px;
-            color: #666;
-            font-size: 0.9em;
-        }}
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1>🛡️ OWASP Security Scan Report</h1>
-            <p class="meta">
-                Target: <strong>{target}</strong><br>
-                Scan Date: {scan_date} | Scan ID: {scan_id}
-            </p>
-            <div class="grade-badge grade-{grade}">{grade}</div>
-            <p>Security Score: <strong>{score}/100</strong></p>
-        </div>
-    </header>
-
-    <main class="container">
-        <div class="summary-cards">
-            <div class="card">
-                <h3>Endpoints Found</h3>
-                <div class="value">{endpoints_count}</div>
-            </div>
-            <div class="card">
-                <h3>Security Findings</h3>
-                <div class="value">{findings_count}</div>
-            </div>
-            <div class="card">
-                <h3>Header Score</h3>
-                <div class="value">{header_score}%</div>
-            </div>
-            <div class="card">
-                <h3>Cookie Score</h3>
-                <div class="value">{cookie_score}%</div>
-            </div>
-        </div>
-
-        {findings_section}
-        {headers_section}
-        {cookies_section}
-        {endpoints_section}
-        {injection_section}
-        {auth_section}
-    </main>
-
-    <footer>
-        <p>Generated by OWASP Scanner v1.0.0 | {generation_time}</p>
-    </footer>
-</body>
-</html>
-"""
+def _load_html_template() -> str:
+    try:
+        return TEMPLATE_PATH.read_text(encoding="utf-8")
+    except FileNotFoundError:
+        raise FileNotFoundError(
+            f"HTML template not found at {TEMPLATE_PATH}. "
+            "Make sure reports/templates/report.html exists."
+        )
 
 
 class ReportGenerator:
@@ -379,7 +88,7 @@ class ReportGenerator:
                 cookie_score = sum(scores) // len(scores)
 
         # Fill template
-        html = HTML_TEMPLATE.format(
+        html = _load_html_template().format(
             target=self.result.target_url,
             scan_date=self.result.start_time.strftime("%Y-%m-%d %H:%M:%S"),
             scan_id=self.result.scan_id[:8] if self.result.scan_id else "N/A",
@@ -395,7 +104,7 @@ class ReportGenerator:
             endpoints_section=endpoints_section,
             injection_section=injection_section,
             auth_section=auth_section,
-            generation_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+            generation_time=datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
         )
 
         with open(filepath, "w", encoding="utf-8") as f:
@@ -612,9 +321,7 @@ class ReportGenerator:
         findings_count = summary.get("findings_count", 0)
 
         findings = injection_results.get("findings") or []
-        tested_params = injection_results.get("tested_endpoints") or []
 
-        # Build findings rows
         findings_html = ""
         for finding in findings:
             severity = finding.get("severity", "info")
@@ -651,7 +358,6 @@ class ReportGenerator:
         if not findings_html:
             findings_html = "<p>✅ No injection vulnerabilities detected.</p>"
 
-        # Summary stats row
         stats_html = f"""
         <div class="summary-cards" style="margin-bottom:15px;">
             <div class="card">
