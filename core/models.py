@@ -252,11 +252,11 @@ class ScanResult(BaseModel):
 
         if self.score >= 90:
             self.grade = "A"
-        elif self.score >= 80:
+        elif self.score >= 75:
             self.grade = "B"
-        elif self.score >= 70:
-            self.grade = "C"
         elif self.score >= 60:
+            self.grade = "C"
+        elif self.score >= 45:
             self.grade = "D"
         else:
             self.grade = "F"
