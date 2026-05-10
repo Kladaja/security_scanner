@@ -223,20 +223,32 @@ class ScanResult(BaseModel):
     grade: str = "A"
 
     def calculate_grade(self):
-        # Deduct points based on severity
-        severity_deductions = {
-            Severity.CRITICAL: 25,
-            Severity.HIGH: 15,
-            Severity.MEDIUM: 8,
-            Severity.LOW: 3,
-            Severity.INFO: 0
+        # Max points each severity bucket can deduct in total
+        severity_config = {
+            Severity.CRITICAL: {"per_finding": 20, "cap": 60},
+            Severity.HIGH: {"per_finding": 10, "cap": 30},
+            Severity.MEDIUM: {"per_finding": 5, "cap": 20},
+            Severity.LOW: {"per_finding": 2, "cap": 8},
+            Severity.INFO: {"per_finding": 0, "cap": 0},
         }
 
-        total_deduction = 0
+        # Group findings by severity
+        from collections import defaultdict
+        counts = defaultdict(int)
         for finding in self.findings:
-            total_deduction += severity_deductions.get(finding.severity, 0)
+            counts[finding.severity] += 1
 
-        self.score = max(0, 100 - total_deduction)
+        total_deduction = 0
+        for severity, cfg in severity_config.items():
+            n = counts.get(severity, 0)
+            if n == 0:
+                continue
+            # First finding hits full cost; extras use log scaling
+            import math
+            raw = cfg["per_finding"] * (1 + math.log(n))
+            total_deduction += min(raw, cfg["cap"])
+
+        self.score = max(0, round(100 - total_deduction))
 
         if self.score >= 90:
             self.grade = "A"
