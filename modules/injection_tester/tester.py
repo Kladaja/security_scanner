@@ -87,7 +87,8 @@ class InjectionTester:
             endpoints: Optional[List[EndpointInfo]] = None,
             test_sqli: bool = True,
             test_xss: bool = True,
-            max_tests_per_endpoint: int = 5
+            max_tests_per_endpoint: int = 10,
+            custom_test_cases: Optional[List[Dict[str, Any]]] = None
     ):
         self.session = session
         self.target_url = target_url
@@ -98,6 +99,7 @@ class InjectionTester:
         self.max_tests = max_tests_per_endpoint
         self.findings: List[Finding] = []
         self.tested_params: List[Dict[str, Any]] = []
+        self.custom_test_cases = custom_test_cases or []
 
     async def run(self) -> Dict[str, Any]:
         logger.info(f"Starting injection testing for {self.base_url}")
@@ -137,6 +139,13 @@ class InjectionTester:
             }
         }
 
+    def _build_url_with_params(self, url: str, params: Dict[str, str]) -> str:
+        if not params:
+            return url
+
+        separator = "&" if "?" in url else "?"
+        return f"{url}{separator}{urlencode(params)}"
+
     def _get_testable_endpoints(self) -> List[Dict[str, Any]]:
         testable = []
 
@@ -164,6 +173,20 @@ class InjectionTester:
                 "source": "common_params"
             })
 
+        for case in self.custom_test_cases:
+            path = case.get("path") or case.get("url")
+            if not path:
+                continue
+
+            full_url = path if path.startswith(("http://", "https://")) else f"{self.base_url}{path}"
+
+            testable.append({
+                "url": full_url,
+                "params": case.get("params", {}),
+                "method": case.get("method", "GET").upper(),
+                "source": "custom_test_cases"
+            })
+
         return testable
 
     async def _test_endpoint(self, endpoint: Dict[str, Any]):
@@ -187,7 +210,8 @@ class InjectionTester:
             all_params: Dict[str, str]
     ):
         # Get baseline response
-        baseline = await self.session.get(url, params=all_params)
+        baseline_url = self._build_url_with_params(url, all_params)
+        baseline = await self.session.get(baseline_url)
         if not baseline:
             return
 
@@ -197,7 +221,8 @@ class InjectionTester:
             test_params = all_params.copy()
             test_params[param_name] = payload
 
-            response = await self.session.get(url, params=test_params)
+            test_url = self._build_url_with_params(url, test_params)
+            response = await self.session.get(test_url)
             if not response:
                 continue
 
@@ -264,7 +289,8 @@ class InjectionTester:
             test_params = all_params.copy()
             test_params[param_name] = payload
 
-            response = await self.session.get(url, params=test_params)
+            test_url = self._build_url_with_params(url, test_params)
+            response = await self.session.get(test_url)
             if not response:
                 continue
 

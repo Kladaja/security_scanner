@@ -87,6 +87,7 @@ class HTTPSession:
             method: str,
             url: str,
             headers: Optional[Dict[str, str]] = None,
+            params: Optional[Dict[str, Any]] = None,
             data: Optional[Any] = None,
             json: Optional[Any] = None,
             follow_redirects: bool = True,
@@ -108,6 +109,7 @@ class HTTPSession:
                 method=method,
                 url=url,
                 headers=request_headers,
+                params=params,
                 data=data,
                 json=json
             )

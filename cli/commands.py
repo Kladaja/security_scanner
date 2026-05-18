@@ -17,6 +17,7 @@ from modules.injection_tester import InjectionTester
 from modules.sensitive_files import SensitiveFileAnalyzer
 from modules.ssl_analyzer import SSLAnalyzer
 from reports.generator import ReportGenerator, get_default_output_dir
+import yaml
 
 AVAILABLE_MODULES = {
     "endpoint": {"name": "Endpoint Discovery", "icon": "🔍", "description": "Discovers endpoints via crawling, robots.txt, sitemap, bruteforce", "active": False},
@@ -61,13 +62,14 @@ MODULE_CONFIG = {
     "injection": {
         "class": InjectionTester,
         "progress": "Testing for injections...",
-        "kwargs": lambda s, t, r, *_: {
+        "kwargs": lambda s, t, r, d, nb, custom_config=None: {
             "session": s,
             "target_url": t,
             "endpoints": r.endpoints,
             "test_sqli": True,
             "test_xss": True,
-            "max_tests_per_endpoint": 5
+            "max_tests_per_endpoint": 10,
+            "custom_test_cases": custom_config.get("injection", {}).get("endpoints", [])
         }
     },
     "auth": {
@@ -82,6 +84,13 @@ MODULE_CONFIG = {
         }
     }
 }
+
+def load_test_cases(path):
+    if not path:
+        return {}
+
+    with open(path, "r", encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
 
 def get_modules(modules): return list(AVAILABLE_MODULES) if "all" in modules else PASSIVE_MODULES if "passive" in modules else modules
 def ok(msg): console.print(f"  [green]✓[/green] {msg}")
@@ -227,7 +236,8 @@ PROCESSORS = {
 }
 
 async def run_scan(target: str, modules: List[str], rate_limit: float,
-                   timeout: int, crawl_depth: int, no_bruteforce: bool) -> ScanResult:
+                   timeout: int, crawl_depth: int, no_bruteforce: bool, custom_endpoints: str = None) -> ScanResult:
+    custom_config = load_test_cases(custom_endpoints)
     result = ScanResult(target_url=target)
     modules = get_modules(modules)
 
@@ -236,9 +246,12 @@ async def run_scan(target: str, modules: List[str], rate_limit: float,
             start_module(name)
 
             cfg = MODULE_CONFIG[name]
-            analyzer = cfg["class"](**
-                cfg["kwargs"](session, target, result, crawl_depth, no_bruteforce)
-            )
+            if name == "injection":
+                kwargs = cfg["kwargs"](session, target, result, crawl_depth, no_bruteforce, custom_config)
+            else:
+                kwargs = cfg["kwargs"](session, target, result, crawl_depth, no_bruteforce)
+
+            analyzer = cfg["class"](**kwargs)
 
             data = await run_progress(cfg["progress"], analyzer.run())
             PROCESSORS[name](result, data)
@@ -262,8 +275,9 @@ async def run_scan(target: str, modules: List[str], rate_limit: float,
 @click.option("--no-bruteforce", is_flag=True, help="Disable path bruteforcing")
 @click.option("--yes", "-y", is_flag=True, help="Skip confirmation prompt")
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
+@click.option("--custom-endpoints", default=None, help="Optional YAML file with project-specific endpoints")
 def scan(target, modules, output, output_dir, rate_limit, timeout,
-         crawl_depth, no_bruteforce, yes, verbose):
+         crawl_depth, no_bruteforce, yes, verbose, custom_endpoints):
     setup_logging(verbose)
     console.print(BANNER)
 
@@ -294,7 +308,8 @@ def scan(target, modules, output, output_dir, rate_limit, timeout,
             rate_limit=rate_limit,
             timeout=timeout,
             crawl_depth=crawl_depth,
-            no_bruteforce=no_bruteforce
+            no_bruteforce=no_bruteforce,
+            custom_endpoints=custom_endpoints
         ))
 
     except KeyboardInterrupt:
