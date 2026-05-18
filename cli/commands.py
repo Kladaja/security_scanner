@@ -329,17 +329,6 @@ def scan(target, modules, output, output_dir, rate_limit, timeout,
 
     display_results_summary(result)
 
-    if fail_on_grade:
-        grade_order = ["A", "B", "C", "D", "F"]
-        current_grade = result.grade
-
-        if current_grade in grade_order and fail_on_grade.upper() in grade_order:
-            if grade_order.index(current_grade) >= grade_order.index(fail_on_grade.upper()):
-                console.print(
-                    f"[red]Scan failed: Grade is: {current_grade}[/red]"
-                )
-                sys.exit(1)
-
     console.print("\n[bold]📄 Generating Reports...[/bold]")
 
     try:
@@ -359,6 +348,17 @@ def scan(target, modules, output, output_dir, rate_limit, timeout,
         if verbose:
             import traceback
             traceback.print_exc()
+
+    if fail_on_grade:
+        grade_order = ["A", "B", "C", "D", "F"]
+        current_grade = result.grade
+
+        if current_grade in grade_order and fail_on_grade.upper() in grade_order:
+            if grade_order.index(current_grade) >= grade_order.index(fail_on_grade.upper()):
+                console.print(
+                    f"[red]Scan failed: Grade is: {current_grade}[/red]"
+                )
+                sys.exit(1)
 
     console.print("\n[bold green]✅ Scan complete![/bold green]")
 
