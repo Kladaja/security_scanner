@@ -277,8 +277,9 @@ async def run_scan(target: str, modules: List[str], rate_limit: float,
 @click.option("--yes", "-y", is_flag=True, help="Skip confirmation prompt")
 @click.option("--verbose", "-v", is_flag=True, help="Enable verbose output")
 @click.option("--custom-endpoints", default=None, help="Optional YAML file with project-specific endpoints")
+@click.option("--fail-on-grade", default="D",  show_default=True, help="Fail scan if grade is equal to or worse than this grade")
 def scan(target, modules, output, output_dir, rate_limit, timeout,
-         crawl_depth, no_bruteforce, yes, verbose, custom_endpoints):
+         crawl_depth, no_bruteforce, yes, verbose, custom_endpoints, fail_on_grade):
     setup_logging(verbose)
     console.print(BANNER)
 
@@ -327,6 +328,17 @@ def scan(target, modules, output, output_dir, rate_limit, timeout,
         sys.exit(1)
 
     display_results_summary(result)
+
+    if fail_on_grade:
+        grade_order = ["A", "B", "C", "D", "F"]
+        current_grade = result.grade
+
+        if current_grade in grade_order and fail_on_grade.upper() in grade_order:
+            if grade_order.index(current_grade) >= grade_order.index(fail_on_grade.upper()):
+                console.print(
+                    f"[red]Scan failed: Grade is: {current_grade}[/red]"
+                )
+                sys.exit(1)
 
     console.print("\n[bold]📄 Generating Reports...[/bold]")
 
