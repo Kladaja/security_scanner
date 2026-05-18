@@ -75,12 +75,13 @@ MODULE_CONFIG = {
     "auth": {
         "class": AuthTester,
         "progress": "Testing authentication...",
-        "kwargs": lambda s, t, *_: {
+        "kwargs": lambda s, t, r, d, nb, custom_config=None: {
             "session": s,
             "target_url": t,
             "test_weak_creds": True,
             "test_session": True,
-            "max_login_attempts": 5
+            "max_login_attempts": 5,
+            "custom_login_endpoints": custom_config.get("auth", {}).get("login_endpoints", [])
         }
     }
 }
@@ -246,7 +247,7 @@ async def run_scan(target: str, modules: List[str], rate_limit: float,
             start_module(name)
 
             cfg = MODULE_CONFIG[name]
-            if name == "injection":
+            if name in ["injection", "auth"]:
                 kwargs = cfg["kwargs"](session, target, result, crawl_depth, no_bruteforce, custom_config)
             else:
                 kwargs = cfg["kwargs"](session, target, result, crawl_depth, no_bruteforce)

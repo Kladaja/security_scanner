@@ -82,7 +82,8 @@ class AuthTester:
             target_url: str,
             test_weak_creds: bool = True,
             test_session: bool = True,
-            max_login_attempts: int = 5
+            max_login_attempts: int = 5,
+            custom_login_endpoints: Optional[List[Dict[str, Any]]] = None
     ):
         self.session = session
         self.target_url = target_url
@@ -93,12 +94,14 @@ class AuthTester:
         self.findings: List[Finding] = []
         self.login_forms: List[Dict[str, Any]] = []
         self.session_issues: List[Dict[str, Any]] = []
+        self.custom_login_endpoints = custom_login_endpoints or []
 
     async def run(self) -> Dict[str, Any]:
         logger.info(f"Starting auth testing for {self.base_url}")
 
         # Find login pages
         await self._find_login_pages()
+        self._load_custom_login_endpoints()
 
         if not self.login_forms:
             logger.info("No login forms found")
@@ -155,6 +158,29 @@ class AuthTester:
                 if form_info:
                     self.login_forms.append(form_info)
                     logger.info(f"Found login form at {url}")
+
+    def _load_custom_login_endpoints(self):
+        for case in self.custom_login_endpoints:
+            path = case.get("path") or case.get("url")
+            if not path:
+                continue
+
+            action = path if path.startswith(("http://", "https://")) else urljoin(self.base_url, path)
+
+            self.login_forms.append({
+                "url": action,
+                "action": action,
+                "method": case.get("method", "POST").upper(),
+                "username_field": case.get("username_field", "username"),
+                "password_field": case.get("password_field", "password"),
+                "content_type": case.get("content_type", "form"),
+                "csrf_field": None,
+                "csrf_token": None,
+                "has_csrf": case.get("has_csrf", False),
+                "weak_credentials": case.get("weak_credentials")
+            })
+
+            logger.info(f"Loaded custom login endpoint: {action}")
 
     def _parse_login_form(self, html: str, url: str) -> Optional[Dict[str, Any]]:
         # Simple form detection
@@ -236,9 +262,13 @@ class AuthTester:
         for form in self.login_forms:
             attempts = 0
 
-            for username, password in self.WEAK_CREDENTIALS:
-                if attempts >= self.max_attempts:
-                    break
+            credentials = form.get("weak_credentials") or [
+                {"username": u, "password": p} for u, p in self.WEAK_CREDENTIALS
+            ]
+
+            for cred in credentials:
+                username = cred["username"]
+                password = cred["password"]
 
                 success, response = await self._attempt_login(form, username, password)
                 attempts += 1
@@ -277,7 +307,10 @@ class AuthTester:
 
         # Make request
         if form["method"] == "POST":
-            response = await self.session.post(form["action"], data=data)
+            if form.get("content_type") == "json":
+                response = await self.session.post(form["action"], json=data)
+            else:
+                response = await self.session.post(form["action"], data=data)
         else:
             response = await self.session.get(form["action"], params=data)
 
