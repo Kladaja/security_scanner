@@ -227,12 +227,35 @@ class InjectionTester:
                     break
 
             # Check for significant response difference (boolean-based)
-            if not is_vulnerable:
-                length_diff = abs(len(response.text) - baseline_length)
-                if length_diff > 500 and "1'='1" in payload:
-                    # Could be boolean-based SQLi
-                    is_vulnerable = True
-                    evidence.append(f"Response length changed by {length_diff} bytes")
+            if length_diff > 500 and "1'='1" in payload:
+                self.findings.append(Finding(
+                    module=self.name,
+                    title=f"Suspicious SQL Injection Behavior in '{param_name}'",
+                    description=f"Parameter '{param_name}' at {url} caused a significant response difference",
+                    severity=Severity.MEDIUM,
+                    confidence="medium",
+                    owasp_categories=self.owasp_categories,
+                    url=url,
+                    evidence={
+                        "parameter": param_name,
+                        "payload": payload,
+                        "indicators": [
+                            f"Response length changed by {length_diff} bytes"
+                        ]
+                    },
+                    recommendation="Manually verify whether this is a real SQL injection. Response length changes alone are not sufficient proof."
+                ))
+
+                self.tested_params.append({
+                    "url": url,
+                    "parameter": param_name,
+                    "type": "sqli",
+                    "vulnerable": False,
+                    "suspicious": True,
+                    "payload": payload
+                })
+
+                return
 
             if is_vulnerable:
                 self.findings.append(Finding(

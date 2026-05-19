@@ -236,7 +236,7 @@ class ScanResult(BaseModel):
         }
 
         if finding.module in active_modules:
-            return 1.25
+            return 1.0
 
         if finding.module in passive_modules:
             return 0.6
@@ -252,12 +252,29 @@ class ScanResult(BaseModel):
             Severity.INFO: 0,
         }
 
-        total_deduction = 0.0
+        passive_modules = {
+            "header_analyzer",
+            "endpoint_discovery",
+            "sensitive_files",
+            "ssl_analyzer"
+        }
+
+        passive_deduction = 0.0
+        active_deduction = 0.0
 
         for finding in self.findings:
             base = severity_points.get(finding.severity, 0)
             weight = self._finding_weight(finding)
-            total_deduction += base * weight
+            deduction = base * weight
+
+            if finding.module in passive_modules:
+                passive_deduction += deduction
+            else:
+                active_deduction += deduction
+
+        passive_deduction = min(passive_deduction, 25)
+
+        total_deduction = passive_deduction + active_deduction
 
         passive_only = all(
             f.module in {"header_analyzer", "endpoint_discovery", "sensitive_files", "ssl_analyzer"}
