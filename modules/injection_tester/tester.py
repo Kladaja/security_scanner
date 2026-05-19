@@ -227,7 +227,9 @@ class InjectionTester:
                     break
 
             # Check for significant response difference (boolean-based)
-            if length_diff > 500 and "1'='1" in payload:
+            length_diff = abs(len(response.text) - baseline_length)
+
+            if not is_vulnerable and length_diff > 500 and "1'='1" in payload:
                 self.findings.append(Finding(
                     module=self.name,
                     title=f"Suspicious SQL Injection Behavior in '{param_name}'",
