@@ -163,16 +163,6 @@ class InjectionTester:
                     "source": ep.source if hasattr(ep, 'source') else "discovery"
                 })
 
-        # Also test the main URL with common param names
-        common_params = ["id", "page", "search", "q", "query", "user", "name", "file", "path"]
-        for param in common_params:
-            testable.append({
-                "url": self.base_url,
-                "params": {param: "1"},
-                "method": "GET",
-                "source": "common_params"
-            })
-
         for case in self.custom_test_cases:
             path = case.get("path") or case.get("url")
             if not path:
@@ -278,6 +268,26 @@ class InjectionTester:
             "vulnerable": False
         })
 
+    def _is_unescaped_xss_reflection(self, response_text: str, payload: str) -> bool:
+        escaped_indicators = [
+            "&lt;",
+            "&gt;",
+            "&quot;",
+            "&#x27;",
+            "&#39;"
+        ]
+
+        if payload not in response_text:
+            return False
+
+        around = response_text[
+            max(0, response_text.find(payload) - 100):response_text.find(payload) + len(payload) + 100]
+
+        if any(e in around for e in escaped_indicators):
+            return False
+
+        return True
+
     async def _test_xss(
             self,
             url: str,
@@ -298,17 +308,15 @@ class InjectionTester:
             is_reflected = False
             evidence = []
 
-            # Direct reflection
-            if payload in response.text:
-                is_reflected = True
-                evidence.append("Payload directly reflected in response")
-
             # Check for dangerous patterns
-            for pattern in self.XSS_REFLECTION_PATTERNS:
-                if re.search(pattern, response.text, re.IGNORECASE):
-                    is_reflected = True
-                    evidence.append(f"XSS pattern found: {pattern}")
-                    break
+            content_type = response.headers.get("Content-Type", "")
+
+            if "html" not in content_type.lower():
+                continue
+
+            if self._is_unescaped_xss_reflection(response.text, payload):
+                is_reflected = True
+                evidence.append("Payload reflected unescaped in HTML response")
 
             if is_reflected:
                 # Check Content-Type - XSS mainly affects HTML
