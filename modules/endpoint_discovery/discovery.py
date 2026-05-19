@@ -1,8 +1,6 @@
-import asyncio
 import re
-import os
 from typing import List, Set, Optional, Dict, Any
-from urllib.parse import urljoin, urlparse, parse_qs
+from urllib.parse import urlparse
 from pathlib import Path
 from bs4 import BeautifulSoup
 import logging
@@ -380,7 +378,7 @@ class EndpointDiscovery:
                     if status in [401, 403]:
                         priority = "high"  # Exists but restricted
                     elif status == 500:
-                        priority = "critical"  # Server error
+                        priority = "medium"  # Server error
 
                     redirect_url = None
                     if status in [301, 302, 307, 308]:
@@ -397,7 +395,9 @@ class EndpointDiscovery:
                     )
 
                     # Add finding for critical discoveries
-                    if status in [403, 500] or priority == "critical":
+                    if priority == "critical" or (status == 403 and self._is_sensitive_path(path)):
+                        self._add_finding_for_path(path, status)
+                    elif status == 500 and self._is_sensitive_path(path):
                         self._add_finding_for_path(path, status)
 
         logger.info(f"Bruteforce complete. Tested {tested}, found {found}")
@@ -544,16 +544,17 @@ class EndpointDiscovery:
                 recommendation="Ensure strong authentication and consider IP restrictions"
             ))
 
-        elif status_code == 500:
+
+        elif status_code == 500 and self._is_sensitive_path(path):
             self.findings.append(Finding(
                 module="endpoint_discovery",
-                title="Server Error Detected",
-                description=f"Server error (500) at {path}",
+                title="Server Error on Sensitive Endpoint",
+                description=f"Server error (500) at sensitive endpoint {path}",
                 severity=Severity.MEDIUM,
-                owasp_categories=["A10"],
+                owasp_categories=["A05"],
                 url=f"{self.base_url}{path}",
                 evidence={"path": path, "status_code": status_code},
-                recommendation="Investigate and fix the server error, implement proper error handling"
+                recommendation="Investigate the endpoint and implement proper error handling"
             ))
 
     async def _add_endpoint(
@@ -599,6 +600,15 @@ class EndpointDiscovery:
 
         self.discovered_endpoints.append(endpoint)
 
+    def _is_sensitive_path(self, path: str) -> bool:
+        path_lower = path.lower()
+        sensitive_patterns = [
+            "admin", "internal", "actuator", "debug", "config",
+            ".env", ".git", ".htpasswd", ".htaccess",
+            "backup", ".sql", "phpinfo", "server-status"
+        ]
+        return any(pattern in path_lower for pattern in sensitive_patterns)
+
     def _get_owasp_categories(self, path: str) -> List[str]:
         categories = []
         path_lower = path.lower()
@@ -611,9 +621,6 @@ class EndpointDiscovery:
 
         if any(x in path_lower for x in ["package.json", "requirements.txt", "composer.json", "go.mod"]):
             categories.append("A03")  # Supply Chain
-
-        if any(x in path_lower for x in ["api", "graphql", "rest"]):
-            categories.append("A01")  # APIs often relate to access control
 
         return categories
 

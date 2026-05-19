@@ -222,31 +222,50 @@ class ScanResult(BaseModel):
     score: int = 100
     grade: str = "A"
 
-    def calculate_grade(self):
-        # Max points each severity bucket can deduct in total
-        severity_config = {
-            Severity.CRITICAL: {"per_finding": 20, "cap": 60},
-            Severity.HIGH: {"per_finding": 10, "cap": 30},
-            Severity.MEDIUM: {"per_finding": 5, "cap": 20},
-            Severity.LOW: {"per_finding": 2, "cap": 8},
-            Severity.INFO: {"per_finding": 0, "cap": 0},
+    def _finding_weight(self, finding: Finding) -> float:
+        passive_modules = {
+            "header_analyzer",
+            "endpoint_discovery",
+            "sensitive_files",
+            "ssl_analyzer"
         }
 
-        # Group findings by severity
-        from collections import defaultdict
-        counts = defaultdict(int)
-        for finding in self.findings:
-            counts[finding.severity] += 1
+        active_modules = {
+            "injection_tester",
+            "auth_tester"
+        }
 
-        total_deduction = 0
-        for severity, cfg in severity_config.items():
-            n = counts.get(severity, 0)
-            if n == 0:
-                continue
-            # First finding hits full cost; extras use log scaling
-            import math
-            raw = cfg["per_finding"] * (1 + math.log(n))
-            total_deduction += min(raw, cfg["cap"])
+        if finding.module in active_modules:
+            return 1.25
+
+        if finding.module in passive_modules:
+            return 0.6
+
+        return 1.0
+
+    def calculate_grade(self):
+        severity_points = {
+            Severity.CRITICAL: 20,
+            Severity.HIGH: 10,
+            Severity.MEDIUM: 5,
+            Severity.LOW: 2,
+            Severity.INFO: 0,
+        }
+
+        total_deduction = 0.0
+
+        for finding in self.findings:
+            base = severity_points.get(finding.severity, 0)
+            weight = self._finding_weight(finding)
+            total_deduction += base * weight
+
+        passive_only = all(
+            f.module in {"header_analyzer", "endpoint_discovery", "sensitive_files", "ssl_analyzer"}
+            for f in self.findings
+        )
+
+        if passive_only:
+            total_deduction = min(total_deduction, 45)
 
         self.score = max(0, round(100 - total_deduction))
 
